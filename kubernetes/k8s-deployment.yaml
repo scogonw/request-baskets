@@ -1,0 +1,79 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webhook
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: request-baskets
+  namespace: webhook
+  labels:
+    app: request-baskets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: request-baskets
+  template:
+    metadata:
+      labels:
+        app: request-baskets
+    spec:
+      containers:
+        - name: request-baskets
+          image: darklynx/request-baskets:latest
+          ports:
+            - containerPort: 55555
+          env:
+            - name: MAXSIZE
+              value: "10000"
+            - name: MODE
+              value: "public"
+            - name: THEME
+              value: "standard"
+            - name: PORT
+              value: "55555"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: request-baskets
+  namespace: webhook
+  labels:
+    app: request-baskets
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 55555
+  selector:
+    app: request-baskets
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+  labels:
+    app: request-baskets
+  name: request-baskets
+  namespace: webhook
+spec:
+  tls:
+    - hosts:
+        - "*.development.scogo.ai"
+      secretName: scogoai-wildcard-certificate-secret
+  rules:
+    - host: webhook.development.scogo.ai
+      http:
+        paths:
+          - backend:
+              service:
+                name: request-baskets
+                port:
+                  number: 80
+            path: /
+            pathType: ImplementationSpecific
