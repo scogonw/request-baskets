@@ -32,9 +32,11 @@ spec:
             - name: MODE
               value: "public"
             - name: THEME
-              value: "standard"
+              value: "flatly"
             - name: PORT
               value: "55555"
+            - name: TOKEN
+              value: "98699641-D281-4BBA-AFAA-0F01366881D1"
 ---
 apiVersion: v1
 kind: Service

@@ -1,3 +1,20 @@
+# Customization
+- Custom docker file that fixes the need for database file and enables using postgres database 
+
+```
+docker build -t request-baskets .
+
+docker run -p 9001:55555  request-baskets /bin/rbaskets -l 0.0.0.0 -db sql -conn postgres://rbaskets_dev:pwd@database_endpoint.com/rbaskets_dev -p 55555 -maxsize 10000 -token TOKEN -mode restricted -theme flatly
+
+docker tag request-baskets scogo.azurecr.io/request-buckets-webhook:v1.2.3
+docker push scogo.azurecr.io/request-buckets-webhook:v1.2.3
+```
+
+
+
+
+
+
 # Request Baskets [![Build Status](https://travis-ci.org/darklynx/request-baskets.svg?branch=master)](https://travis-ci.org/darklynx/request-baskets) [![Coverage Status](https://coveralls.io/repos/github/darklynx/request-baskets/badge.svg?branch=master)](https://coveralls.io/github/darklynx/request-baskets?branch=master) [![Go Report Card](https://goreportcard.com/badge/github.com/darklynx/request-baskets)](https://goreportcard.com/report/github.com/darklynx/request-baskets)
 
 [Request Baskets](https://rbaskets.in) is a web service to collect arbitrary HTTP requests and inspect them via RESTful API or simple web UI.

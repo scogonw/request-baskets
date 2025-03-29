@@ -21,4 +21,6 @@ VOLUME /var/lib/rbaskets
 COPY docker/entrypoint.sh /bin/entrypoint
 COPY --from=builder /go/bin/rbaskets /bin/rbaskets
 EXPOSE 55555
-CMD /bin/entrypoint
+# CMD /bin/entrypoint
+RUN which rbaskets
+CMD /bin/rbaskets -l 0.0.0.0
